@@ -4,20 +4,23 @@ class FavoritesController < ApplicationController
     
     
   def create
-    @favorite = Favorite.create(user_id: current_user.id, micropost_id: @micropost.id)
+    @favorite = current_user.favorites.build(micropost_id: params[:micropost_id])
+    @favorite.save
     flash[:success] = 'お気に入りに追加しました。'
-    redirect_to root_url
+    redirect_back(fallback_location: root_path)
   end
 
   def destroy
-    @favorite = Favorite.find_by(user_id: current_user.id,micropost_id: @micropost.id)
+    #favorite = Favorite.find_by(user_id: current_user.id,micropost_id: params[:micropost_id])
+    @micropost = Micropost.find(params[:micropost_id])
+    @favorite = current_user.favorites.find_by(micropost_id: @micropost.id)
     @favorite.destroy
     flash[:success] = 'お気に入りから外しました。'
-    redirect_to root_url
+    redirect_back(fallback_location: root_path)
   end
   
+  private
   
-    private
   def set_micropost
     @micropost = Micropost.find(params[:micropost_id])
   end

@@ -9,9 +9,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @microposts = @user.microposts.order(id: :desc).page(params[:page])
     counts(@user)
-    
-    favorites = Favorite.where(user_id: current_user.id).pluck(:micropost_id) 
-    @favorite_list = Micropost.find(favorites) 
   end
 
   def new
@@ -40,17 +37,19 @@ class UsersController < ApplicationController
     @followers = @user.followers.page(params[:page])
     counts(@user)
   end
-  
-  def favorites
+
+  def likes
     @user = User.find(params[:id])
-    @favorites = @user.favorites.page(params[:page])
+    @microposts = @user.microposts.order(id: :desc).page(params[:page])
+    @likes = @user.likes.page(params[:page])
     counts(@user)
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 end
 
-private
-
-def user_params
-  params.require(:user).permit(:name, :email, :password, :password_confirmation)
-end
 
