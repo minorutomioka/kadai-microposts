@@ -11,8 +11,6 @@ class FavoritesController < ApplicationController
   end
 
   def destroy
-    #favorite = Favorite.find_by(user_id: current_user.id,micropost_id: params[:micropost_id])
-    @micropost = Micropost.find(params[:micropost_id])
     @favorite = current_user.favorites.find_by(micropost_id: @micropost.id)
     @favorite.destroy
     flash[:success] = 'お気に入りから外しました。'
